@@ -10,6 +10,7 @@ plugins {
     id 'com.gradle.plugin-publish' version '1.2.1'
     id 'org.ajoberstar.git-publish' version '4.2.1'
     id 'com.github.node-gradle.node' version '7.0.1'
+    id 'maven-publish'
 }
 
 apply plugin: ShadowPlugin
@@ -70,4 +71,19 @@ targetCompatibility = '1.8'
 tasks.register('downloadDependencies', Exec) {
     dependsOn configurations.testRuntimeClasspath
     commandLine 'echo', 'Downloaded all dependencies'
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "eldonexus"
+            url = uri("https://eldonexus.de/repository/maven-snapshots/")
+            credentials(PasswordCredentials)
+        }
+    }
+    publications{
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
 }
